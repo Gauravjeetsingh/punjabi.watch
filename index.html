@@ -6,137 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@400..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gurmukhi:wght@100..900&display=swap" rel="stylesheet">
   <title>Punjabi watch</title>
+
+  <link rel="stylesheet" href="style.css">
 </head>
-<style>
-  #time {
-    font-family: "Baloo Paaji 2", sans-serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-    font-size: 90px;
-    text-align: center;
-    margin-top: 50px;
-  }
-</style>
 
 <body>
+  <header>
+  </header>
 
-  <h3 id="time"></h3>
+  <section class="main">
+    <h3 id="time">
+    </h3>
+  </section>
 
+  <footer>
+  </footer>
 
-  <script>
-    const currentTime = new Date();
-
-    const currentHour = currentTime.getHours();
-    const currentMinute = currentTime.getMinutes();
-
-    const hourText = {
-      1: 'ਇੱਕ',
-      2: 'ਦੋ',
-      3: 'ਤਿੰਨ',
-      4: 'ਚਾਰ',
-      5: 'ਪੰਜ',
-      6: 'ਛੇ',
-      7: 'ਸੱਤ',
-      8: 'ਅੱਠ',
-      9: 'ਨੌਂ',
-      10: 'ਦਸ',
-      11: 'ਗਿਆਰਾਂ',
-      12: 'ਬਾਰਾਂ'
-    }
-
-    const minuteText = {
-      ...hourText,
-      13: 'ਤੇਰ੍ਹਾਂ',
-      14: 'ਚੌਦਾਂ',
-      15: 'ਸਵਾ',
-      16: 'ਸੋਲਾਂ',
-      17: 'ਸਤਾਰਾਂ',
-      18: 'ਅਠਾਰਾਂ',
-      19: 'ਉਨ੍ਹੀ',
-      20: 'ਵੀਹ',
-      21: 'ਇੱਕੀ',
-      22: 'ਬਾਈ',
-      23: 'ਤੇਈ',
-      24: 'ਚੌਵੀ',
-      25: 'ਪੱਚੀ',
-      26: 'ਛੱਬੀ',
-      27: 'ਸਤਾਈ',
-      28: 'ਅਠਾਈ',
-      29: 'ਉਣੱਤੀ',
-      30: 'ਸਾਢੇ',
-      31: 'ਇਕੱਤੀ',
-      32: 'ਬੱਤੀ',
-      33: 'ਤੇਤੀ',
-      34: 'ਚੌਂਤੀ',
-      35: 'ਪੈਂਤੀ',
-      36: 'ਛੱਤੀ',
-      37: 'ਸੈਂਤੀ',
-      38: 'ਅਠੱਤੀ',
-      39: 'ਉਣਤਾਲ਼ੀ',
-      40: 'ਚਾਲੀ',
-      41: 'ਇੱਕਤਾਲੀ',
-      42: 'ਬਤਾਲੀ',
-      43: 'ਤ੍ਰੈਤਾਲੀ',
-      44: 'ਚੁਤਾਲੀ',
-      45: 'ਪੌਣੇ',
-      46: 'ਛਿਆਲੀ',
-      47: 'ਸਨਤਾਲੀ',
-      48: 'ਅਠਤਾਲੀ',
-      49: 'ਉਨੰਜਾ',
-      50: 'ਪੰਜਾਹ',
-      51: 'ਇਕਵੰਜਾ',
-      52: 'ਬਵੰਜਾ',
-      53: 'ਤ੍ਰੀਪੰਜਾ',
-      54: 'ਚੌਵੰਜਾ',
-      55: 'ਪਚਵੰਜਾ',
-      56: 'ਸ਼ਪੰਜਾ',
-      57: 'ਸਤਵੰਜਾ',
-      58: 'ਅਠਵੰਜਾ',
-      59: 'ਉੱਨੱਠ',
-      60: ''
-    };
-
-    const specialText = (hour, minute) => {
-      if (hour == 1 && minute == 30) {
-        return 'ਡੇੜ੍ਹ';
-      } else if (hour == 2 && minute == 30) {
-        return 'ਢਾਈ';
-      } else {
-        return null;
-      }
-    }
-
-    const showTime = () => {
-      const timeString = get12HourFormat(currentTime);
-      const timeArray = timeString.split(':');
-      const hour = parseInt(timeArray[0], 10);
-      const minute = parseInt(timeArray[1], 10);
-      const punjabiHour = hourText[hour];
-      const punjabiMinute = minuteText[minute];
-      const specialTextValue = specialText(hour, minute);
-      if (specialTextValue) {
-        document.querySelector('#time').textContent = specialTextValue;
-      } else if (minute == 15 || minute == 30) {
-        document.querySelector('#time').textContent = `${punjabiMinute} ${punjabiHour}`;
-      } else if (minute == 45) {
-        document.querySelector('#time').textContent = `${punjabiMinute} ${hourText[hour + 1]}`;
-      } else {
-        document.querySelector('#time').textContent = `${punjabiHour} ${punjabiMinute}`;
-      }
-    }
-
-    const get12HourFormat = (time) => {
-     var timeIn12HourFormat = time.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      });
-      return timeIn12HourFormat;
-    }
-    showTime();
-  </script>
+  <script src="watch.js"></script>
 
 </body>
 
