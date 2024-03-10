@@ -100,7 +100,7 @@ const showTime = () => {
     } else {
       timeEl.textContent = `${punjabiMinute} ${hourText[1]}`;
     }
-  } else if (minute == 60) {
+  } else if (minute == 60 || minute == 0) {
     timeEl.textContent = `${punjabiHour} ਵੱਜੇ`;
   } else {
     timeEl.textContent = `${punjabiHour} ${punjabiMinute}`;
