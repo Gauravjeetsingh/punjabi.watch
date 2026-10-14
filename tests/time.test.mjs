@@ -40,10 +40,12 @@ test('Nanakshahi matches existing app solar month starts across every day 2003â€
 });
 test('city civil time handles DST skips, repeats, half-hour offsets and midnight', () => {
   const p = (s,z) => zonedParts(new Date(s),z);
-  assert.equal(p('2026-03-08T09:59:00Z','America/Vancouver').hour,1);
-  assert.equal(p('2026-03-08T10:00:00Z','America/Vancouver').hour,3);
-  assert.equal(p('2026-11-01T08:30:00Z','America/Vancouver').hour,1);
-  assert.equal(p('2026-11-01T09:30:00Z','America/Vancouver').hour,1);
+  // Historical transitions stay stable across time-zone database updates.
+  // Vancouver no longer falls back from November 2026 (B.C. permanent UTC-7).
+  assert.equal(p('2025-03-09T09:59:00Z','America/Vancouver').hour,1);
+  assert.equal(p('2025-03-09T10:00:00Z','America/Vancouver').hour,3);
+  assert.equal(p('2025-11-02T08:30:00Z','America/Vancouver').hour,1);
+  assert.equal(p('2025-11-02T09:30:00Z','America/Vancouver').hour,1);
   assert.equal(p('2026-10-14T19:00:00Z','Asia/Kolkata').minute,30);
   const a = p('2026-10-14T19:00:00Z','Asia/Kolkata'), b = p('2026-10-14T19:00:00Z','America/Vancouver');
   assert.equal(a.hour,0); assert.equal(dayDifference(a,b),1);
