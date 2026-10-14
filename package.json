@@ -1,0 +1,22 @@
+{
+  "name": "punjabi-watch-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs && node scripts/serve.mjs",
+    "test": "node --test tests/time.test.mjs",
+    "test:browser": "node tests/browser.mjs"
+  },
+  "dependencies": {
+    "nanakshahi": "9.0.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "playwright": "1.64.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

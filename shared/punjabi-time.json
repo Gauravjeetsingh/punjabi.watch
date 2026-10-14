@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 4,
+  "reviewStatus": "draft-unreviewed",
+  "scripts": {
+    "gurmukhi": {
+      "numbers": ["ਸਿਫ਼ਰ", "ਇੱਕ", "ਦੋ", "ਤਿੰਨ", "ਚਾਰ", "ਪੰਜ", "ਛੇ", "ਸੱਤ", "ਅੱਠ", "ਨੌਂ", "ਦਸ", "ਗਿਆਰਾਂ", "ਬਾਰਾਂ", "ਤੇਰਾਂ", "ਚੌਦਾਂ", "ਪੰਦਰਾਂ", "ਸੋਲਾਂ", "ਸਤਾਰਾਂ", "ਅਠਾਰਾਂ", "ਉੱਨੀ", "ਵੀਹ", "ਇੱਕੀ", "ਬਾਈ", "ਤੇਈ", "ਚੌਵੀ", "ਪੱਚੀ", "ਛੱਬੀ", "ਸਤਾਈ", "ਅਠਾਈ", "ਉਨੱਤੀ", "ਤੀਹ", "ਇਕੱਤੀ", "ਬੱਤੀ", "ਤੇਤੀ", "ਚੌਂਤੀ", "ਪੈਂਤੀ", "ਛੱਤੀ", "ਸੈਂਤੀ", "ਅਠੱਤੀ", "ਉਨਤਾਲੀ", "ਚਾਲੀ", "ਇਕਤਾਲੀ", "ਬਿਆਲੀ", "ਤਰਤਾਲੀ", "ਚੁਤਾਲੀ", "ਪੰਤਾਲੀ", "ਛਿਆਲੀ", "ਸੰਤਾਲੀ", "ਅਠਤਾਲੀ", "ਉਨੰਜਾ", "ਪੰਜਾਹ", "ਇਕਵੰਜਾ", "ਬਵੰਜਾ", "ਤਰਵੰਜਾ", "ਚੁਰੰਜਾ", "ਪਚਵੰਜਾ", "ਛਪੰਜਾ", "ਸਤਵੰਜਾ", "ਅਠਵੰਜਾ", "ਉਨਾਹਠ"],
+      "patterns": {
+        "exact": "{hour} ਵੱਜੇ",
+        "literal": "{hour} {minute}",
+        "quarterPast": "ਸਵਾ {hour}",
+        "halfPast": "ਸਾਢੇ {hour}",
+        "quarterTo": "ਪੌਣੇ {nextHour}"
+      },
+      "halfPastOverrides": {
+        "1": "ਡੇਢ ਵੱਜੇ",
+        "2": "ਢਾਈ ਵੱਜੇ"
+      },
+      "dayPeriods": {
+        "amritVela": "ਅੰਮ੍ਰਿਤ ਵੇਲਾ",
+        "morning": "ਸਵੇਰ ਦੇ",
+        "afternoon": "ਦੁਪਹਿਰ ਦੇ",
+        "evening": "ਸ਼ਾਮ ਦੇ",
+        "night": "ਰਾਤ ਦੇ"
+      }
+    },
+    "roman": {
+      "numbers": ["sifar", "ikk", "do", "tinn", "chaar", "panj", "chhe", "satt", "atth", "naun", "das", "gyara", "baara", "teraan", "chaudaan", "pandaraan", "solaan", "sataaraan", "athaaraan", "unni", "veeh", "ikki", "baai", "tei", "chauvi", "pachchi", "chhabbi", "sataai", "athaai", "unatti", "teeh", "ikatti", "batti", "teti", "chaunti", "painti", "chhatti", "sainti", "athatti", "untaali", "chaali", "iktaali", "biaali", "tartaali", "chutaali", "pantaali", "chhiaali", "santaali", "athtaali", "unanja", "panjaah", "ikvanja", "bavanja", "tarvanja", "churanja", "pachvanja", "chhapanja", "satvanja", "athvanja", "unaahth"],
+      "patterns": {
+        "exact": "{hour} vjje",
+        "literal": "{hour} {minute}",
+        "quarterPast": "sva {hour}",
+        "halfPast": "sade {hour}",
+        "quarterTo": "pone {nextHour}"
+      },
+      "halfPastOverrides": {
+        "1": "dedh vjje",
+        "2": "dhai vjje"
+      },
+      "dayPeriods": {
+        "amritVela": "amrit vela",
+        "morning": "saver de",
+        "afternoon": "dupehar de",
+        "evening": "sham de",
+        "night": "raat de"
+      }
+    }
+  }
+}
