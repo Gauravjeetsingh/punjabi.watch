@@ -2,35 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f1e9">
+  <meta name="theme-color" content="#11252e">
   <title>Punjabi watch — the time, in Punjabi</title>
   <meta name="description" content="A live Punjabi word clock in Gurmukhi, today's Nanakshahi date, and world clocks for the places you keep close.">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="/assets/noto-sans-gurmukhi.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script>
 </head>
-<body>
+<body class="ocean-home">
 <a class="skip" href="#main">Skip to clock</a>
-<header class="site-header wrap">
-  <a class="wordmark" href="/" aria-label="Punjabi watch home"><span lang="pa">ਪੰਜਾਬੀ</span><span class="wordmark-suffix">.watch</span></a>
-  <nav aria-label="Main navigation"><a aria-current="page" href="/">Clock</a><a href="/watch/">Watch face <span aria-hidden="true">↗</span></a></nav>
-</header>
-<main id="main" class="wrap">
-  <section class="clock-section" aria-labelledby="clock-heading">
-    <div class="section-line"><h1 id="clock-heading">The time, in Punjabi</h1><p><span class="live-dot" aria-hidden="true"></span> <span id="local-zone">Your local time</span></p></div>
+<div class="ocean-backdrop" aria-hidden="true">
+  <video id="sea-video" muted loop playsinline preload="none" poster="/assets/sea-water-poster.jpg" tabindex="-1">
+    <source data-src="/assets/sea-water.mp4" data-mobile-src="/assets/sea-water-mobile.mp4" type="video/mp4">
+  </video>
+</div>
+<main id="main">
+  <section class="clock-section ocean-hero" aria-labelledby="clock-heading">
+    <h1 id="clock-heading" class="sr-only">The time, in Punjabi</h1>
     <div class="main-clock" role="timer" aria-label="Current local time in Punjabi">
       <p id="day-period" class="day-period" lang="pa">ਇਸ ਵੇਲੇ</p>
       <p id="time-words" class="time-words" lang="pa">—</p>
       <p id="numeric-time" class="numeric-time">Reading your clock…</p>
+      <p id="local-zone" class="local-zone">Your local time</p>
     </div>
-    <div class="date-strip">
-      <div class="date-label"><span lang="pa">ਅੱਜ</span><span>Today</span></div>
-      <div class="date-primary"><p id="nanakshahi-date" lang="pa">—</p><span>Nanakshahi calendar</span></div>
-      <p id="gregorian-date" class="gregorian-date"></p>
+    <div class="ocean-hero-bottom">
+      <div class="ocean-date"><p id="nanakshahi-date" lang="pa">—</p><p id="gregorian-date"></p></div>
+      <a href="#world-title" class="scroll-cue"><span>World clocks</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 4v15m-5-5 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
     </div>
+    <button id="video-toggle" class="video-toggle" type="button" aria-label="Play background video" title="Play background video" hidden>
+      <svg class="video-pause-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 6v12M15 6v12" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      <svg class="video-play-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m9 6 9 6-9 6Z" fill="currentColor"/></svg>
+    </button>
     <noscript><p class="notice">Enable JavaScript to see the live clock, date, and world clocks.</p></noscript>
     <p id="clock-error" class="notice" hidden></p>
   </section>
+  <div class="ocean-below"><div class="wrap">
   <section class="world-section" aria-labelledby="world-title">
     <div class="section-heading"><div><p class="eyebrow" lang="pa">ਇੱਥੇ ਵੀ, ਉੱਥੇ ਵੀ</p><h2 id="world-title">Your world, at a glance.</h2></div><button id="add-city" class="button" type="button"><span aria-hidden="true">＋</span> Add a city</button></div>
     <div id="world-clocks" class="world-grid"></div>
@@ -39,8 +45,18 @@
   </section>
   <a class="watch-teaser" href="/watch/"><img src="/assets/01-quarter-past.png" alt="Punjabi watch face showing ਸਵਾ ਦਸ" width="112" height="112"><div><p class="eyebrow">For Wear OS</p><h2>The same words. On your wrist.</h2><p>Meet the Punjabi watch face.</p></div><span class="teaser-arrow" aria-hidden="true">↗</span></a>
   <details class="calendar-note"><summary>About the clock &amp; calendar</summary><p>The clock uses the same Punjabi wording as our app and watch face, including ਸਵਾ, ਸਾਢੇ, ਪੌਣੇ, ਡੇਢ ਵੱਜੇ and ਢਾਈ ਵੱਜੇ. It updates automatically each minute using your device’s time and time zone.</p><p>The date follows the fixed solar Nanakshahi calendar adopted in 2003, calculated for your local day using <a href="https://github.com/sarabveer/nanakshahi-js">Sarabveer Singh’s nanakshahi library</a>. Calendar traditions can differ; this is the 2003 convention. Month spellings match our app.</p></details>
+<footer class="site-footer"><p>The time, in Punjabi.</p><div><a href="/credits.html">Credits</a><a href="/privacy.html">Privacy</a></div></footer>
+  </div></div>
 </main>
-<footer class="site-footer wrap"><p>ਪੰਜਾਬੀ <span> / </span> Punjabi watch</p><div><a href="/watch/">Watch face</a><a href="/credits.html">Credits</a><a href="/privacy.html">Privacy</a></div></footer>
+<details class="watch-corner" id="watch-corner">
+  <summary aria-label="Watch face preview" title="Watch face preview"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="5.5" y="6" width="13" height="12" rx="5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M9 6V2.5h6V6M9 18v3.5h6V18M19 10v3" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span class="watch-corner-label">Watch face</span><svg class="watch-corner-chevron" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="m4 10 4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></summary>
+  <aside class="watch-corner-panel" aria-labelledby="watch-corner-title">
+    <button class="watch-corner-close" type="button" aria-label="Collapse watch-face preview">×</button>
+    <div class="watch-corner-preview"><img src="/assets/01-quarter-past.png" alt="Punjabi watch face showing ਸਵਾ ਦਸ" width="64" height="64"><div><p class="eyebrow">For Wear OS</p><h2 id="watch-corner-title">Punjabi on your wrist.</h2></div></div>
+    <p class="watch-corner-description">The same familiar words, always a glance away.</p>
+    <a class="watch-corner-link" href="/watch/">Explore the watch face <span aria-hidden="true">↗</span></a>
+  </aside>
+</details>
 <dialog id="city-dialog" aria-labelledby="dialog-title">
   <div class="dialog-heading"><div><p class="eyebrow">World clocks</p><h2 id="dialog-title">Find your city.</h2></div><button id="close-dialog" class="icon-button" aria-label="Close city search">×</button></div>
   <label class="search-label" for="city-search">City or time zone</label><input id="city-search" type="search" placeholder="Try Amritsar, Vancouver or Asia/Kolkata" autocomplete="off">

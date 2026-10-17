@@ -1,3 +1,4 @@
+import { initTesterSignup } from './tester-signup.js';
 import { formatTime, dayPeriod, zonedParts, numericTime, formatNanakshahi, dayDifference, minuteDelay } from './time.js';
 import { cityList, defaults, loadCities, storageKey, validZone } from './cities.js';
 const $ = selector => document.querySelector(selector);
@@ -121,3 +122,49 @@ for (const button of document.querySelectorAll('[data-mode]')) {
     for (const other of document.querySelectorAll('[data-mode]')) other.setAttribute('aria-pressed', String(other === button));
   });
 }
+
+const seaVideo = $('#sea-video');
+if (seaVideo) {
+  const toggle = $('#video-toggle');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let resumeOnReturn = false;
+  function updateVideoControl() {
+    const playing = !seaVideo.paused && !seaVideo.ended;
+    toggle.dataset.playing = String(playing);
+    toggle.setAttribute('aria-label', `${playing ? 'Pause' : 'Play'} background video`);
+    toggle.title = toggle.getAttribute('aria-label');
+  }
+  async function playVideo() {
+    const source = seaVideo.querySelector('source');
+    if (!source.getAttribute('src')) { source.src = window.matchMedia('(max-width: 640px)').matches ? source.dataset.mobileSrc : source.dataset.src; seaVideo.load(); }
+    seaVideo.muted = true;
+    try { await seaVideo.play(); } catch { /* The poster stays visible when autoplay is blocked. */ }
+    updateVideoControl();
+  }
+  toggle.hidden = false;
+  toggle.addEventListener('click', () => { if (seaVideo.paused) playVideo(); else seaVideo.pause(); });
+  for (const event of ['play', 'pause', 'ended', 'error']) seaVideo.addEventListener(event, updateVideoControl);
+  reducedMotion.addEventListener('change', event => { if (event.matches) { resumeOnReturn = false; seaVideo.pause(); } });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { resumeOnReturn = !seaVideo.paused; seaVideo.pause(); }
+    else if (resumeOnReturn && !reducedMotion.matches) { resumeOnReturn = false; playVideo(); }
+  });
+  if (!reducedMotion.matches && !navigator.connection?.saveData) playVideo();
+  else updateVideoControl();
+}
+
+const watchCorner = $('#watch-corner');
+if (watchCorner) {
+  const summary = watchCorner.querySelector('summary');
+  const collapse = (returnFocus = false) => { watchCorner.open = false; if (returnFocus) summary.focus(); };
+  watchCorner.querySelector('.watch-corner-close').addEventListener('click', () => collapse(true));
+  document.addEventListener('click', event => { if (watchCorner.open && !watchCorner.contains(event.target)) collapse(); });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !event.defaultPrevented && watchCorner.open) {
+      event.preventDefault(); collapse(watchCorner.contains(document.activeElement));
+    }
+  });
+}
+
+const testerSignup = document.querySelector('#tester-signup-form');
+if (testerSignup) initTesterSignup(testerSignup);

@@ -54,3 +54,38 @@ No Play Store link is shown until the public listing for
 Tests cover all 1,440 minutes, calendar agreement for every day from 2003–2100,
 DST transitions, date rollover, storage recovery, city interactions, and mobile
 and desktop layouts. Browser screenshots are saved under ignored `test-results/`.
+
+## Sea-water theme
+
+The home page uses the supplied sea-water video as one fixed, full-page scene.
+The word clock fills the first viewport; the date and scroll cue sit below it,
+and the world clocks continue below the fold. The header and home wordmark are
+removed. The watch showcase uses the same blue-grey palette without video.
+
+The original 4K clip is exported as silent H.264 MP4 at 1920px for desktop and
+960px for phones, with fast-start playback and a still poster. The mobile source
+is selected before loading to avoid downloading both. The background can be
+paused, stays still for reduced-motion/data-saving preferences until played,
+and pauses when the tab is hidden. The local preview supports byte-range video
+requests. `npm run test:ocean` checks media controls, fallback behavior, responsive
+layouts, world-clock scroll placement and the still watch page.
+
+## Tester signups
+
+The showcase uses a custom email field and inline confirmation with Formspree.
+Set `data-endpoint` on `#tester-signup-form` in `public/watch/index.html` to the
+actual generated endpoint from Formspree’s Integration tab (`https://formspree.io/f/<id>`).
+The configured form endpoint is `https://formspree.io/f/xyekoray`. The submit
+button is enabled when the generated endpoint is valid. Missing or malformed
+configuration keeps the form disabled.
+
+No API secret is needed or placed in the page. Submissions send the email, tester
+signup purpose and honeypot directly to Formspree; email addresses are not saved
+in browser storage. The UI handles validation, loading, successful confirmation,
+rate limits and connection failures without leaving the showcase. Only confirmed
+successful responses show “Joined.” The separate `/signup-privacy.html` notice
+covers signups; the Play Console `/privacy.html` remains unchanged.
+
+`npm run test:signup` checks success/failure behavior, duplicate-submit prevention,
+honeypot handling and responsive layout with intercepted requests. It does not
+send any test email addresses to Formspree.
