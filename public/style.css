@@ -127,6 +127,9 @@ dialog{width:min(560px,calc(100% - 32px));max-height:min(720px,90dvh);padding:30
 @media(max-width:390px){.watch-page .signup-input-row .signup-button{padding:10px;font-size:11px}.signup-input-row input{font-size:12px;padding:11px 8px}}
 @media(max-width:640px){.signup-input-row input{font-size:16px}}
 /* Sundial hero: dial, then the time in words, then the date. Basic layout; styling to follow. */
+/* Behind the page (overscroll, the strip under the browser bars, sub-pixel gaps at the
+   viewport's edge on phones) is stone too, not the light paper colour. */
+html:has(> body.ocean-home){background:#6e5434}
 /* The page is the stone the dial is set into. #sun-light lays the sun's shadow and colour over all of it. */
 .ocean-home{background:#6e5434 url('/assets/background.jpg') center/cover no-repeat;position:relative;min-height:100svh}
 .sun-light{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:hidden;mix-blend-mode:multiply}
