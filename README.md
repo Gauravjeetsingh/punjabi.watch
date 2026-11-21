@@ -43,6 +43,16 @@ future privacy policy revision must update the recorded checksum as well.
   saving rules. City selections are stored only in the visitor’s browser.
 - Minute-boundary updates and tab-resume handling always read the actual clock.
 
+## Sundial
+
+The home page shows a sundial whose shadow is computed from the sun and reads the
+visitor's clock time (heliochronometer mode). Its engine and plate artwork are
+snapshots of `design/sundial` in the app project: `src/sundial/*.cjs`,
+`src/sundial/numerals.json` and `public/assets/sundial/sundial-plate.svg`. Update
+them with `node scripts/sync-sundial.mjs`; do not edit the copies here. The dial's
+latitude comes from the device time zone (`src/sundial-location.js`, falling back to
+Amritsar), so no location permission is requested.
+
 ## Images and credits
 
 The bundled Noto Sans Gurmukhi font is under SIL OFL 1.1. Real watch screenshots

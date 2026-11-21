@@ -1,6 +1,10 @@
 import { initTesterSignup } from './tester-signup.js';
 import { formatTime, dayPeriod, zonedParts, numericTime, formatNanakshahi, dayDifference, minuteDelay } from './time.js';
 import { cityList, defaults, loadCities, storageKey, validZone } from './cities.js';
+import { sundialLocation } from './sundial-location.js';
+import { applySky } from './sky.js';
+import SundialView from './sundial/sundial-view.cjs';
+import sundialNumerals from './sundial/numerals.json';
 const $ = selector => document.querySelector(selector);
 const make = (tag, className, text) => {
   const node = document.createElement(tag);
@@ -19,7 +23,20 @@ if ($('#time-words')) {
   const search = $('#city-search');
   const zoneName = () => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
   const sameCity = (a, b) => a.zone === b.zone && a.name === b.name;
-  const setText = (selector, text) => { const node = $(selector); if (node.textContent !== text) node.textContent = text; };
+  // World clocks are optional: the home page currently shows only the sundial and words.
+  const hasWorld = Boolean($('#world-clocks'));
+  const setText = (selector, text) => { const node = $(selector); if (node && node.textContent !== text) node.textContent = text; };
+  let sundial = null;
+  try { if ($('#sundial')) sundial = SundialView.mount($('#sundial'), { plateHref: '/assets/sundial/sundial-plate.svg', numerals: sundialNumerals, overlay: $('#sun-light'), lamp: $('.main-clock') }); }
+  catch { /* The words and date still work without the dial. */ }
+  function drawSundial(now, zone, parts) {
+    if (!sundial) return;
+    try {
+      const place = sundialLocation(zone);
+      // Clock-corrected (heliochronometer): the shadow reads the device's clock time.
+      applySky(sundial.update({ latitude: place.latitude, longitude: place.longitude, date: now, clockHours: parts.hour + parts.minute / 60, mode: 'clock' }));
+    } catch { /* Keep the last drawn shadow. */ }
+  }
 
   function tick() {
     clearTimeout(timer);
@@ -31,6 +48,7 @@ if ($('#time-words')) {
       setText('#day-period', dayPeriod(parts.hour, parts.minute));
       setText('#time-words', formatTime(parts.hour, parts.minute));
       setText('#numeric-time', numericTime(parts));
+      drawSundial(now, zone, parts);
       setText('#gregorian-date', new Intl.DateTimeFormat('en-GB', { timeZone: zone, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(now));
       try { setText('#nanakshahi-date', formatNanakshahi(parts)); }
       catch { setText('#nanakshahi-date', '—'); throw new Error('The Nanakshahi calendar supports dates from 14 March 2003. Please check your device date.'); }
@@ -102,16 +120,19 @@ if ($('#time-words')) {
       }); results.append(button);
     }
   }
-  $('#add-city').addEventListener('click', () => { search.value = ''; renderResults(); dialog.showModal(); search.focus(); });
-  $('#close-dialog').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); dialog.close(); } });
-  dialog.addEventListener('click', event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } });
-  search.addEventListener('input', renderResults);
+  if (hasWorld) {
+    $('#add-city').addEventListener('click', () => { search.value = ''; renderResults(); dialog.showModal(); search.focus(); });
+    $('#close-dialog').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); dialog.close(); } });
+    dialog.addEventListener('click', event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } });
+    search.addEventListener('input', renderResults);
+  }
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') tick(); else clearTimeout(timer); });
   window.addEventListener('focus', tick);
   window.addEventListener('pageshow', tick);
-  window.addEventListener('storage', event => { if (event.key === storageKey || event.key === null) { try { selected = loadCities(localStorage); } catch { selected = [...defaults]; } renderCards(); tick(); if (dialog.open) renderResults(); } });
-  renderCards(); tick();
+  if (hasWorld) window.addEventListener('storage', event => { if (event.key === storageKey || event.key === null) { try { selected = loadCities(localStorage); } catch { selected = [...defaults]; } renderCards(); tick(); if (dialog.open) renderResults(); } });
+  if (hasWorld) renderCards();
+  tick();
 }
 
 for (const button of document.querySelectorAll('[data-mode]')) {
@@ -121,36 +142,6 @@ for (const button of document.querySelectorAll('[data-mode]')) {
     $('#feature-shot').alt = `${ambient ? 'Always-on' : 'Active'} Punjabi watch face at 7:45 pm: ਰਾਤ ਦੇ, ਪੌਣੇ ਅੱਠ`;
     for (const other of document.querySelectorAll('[data-mode]')) other.setAttribute('aria-pressed', String(other === button));
   });
-}
-
-const seaVideo = $('#sea-video');
-if (seaVideo) {
-  const toggle = $('#video-toggle');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let resumeOnReturn = false;
-  function updateVideoControl() {
-    const playing = !seaVideo.paused && !seaVideo.ended;
-    toggle.dataset.playing = String(playing);
-    toggle.setAttribute('aria-label', `${playing ? 'Pause' : 'Play'} background video`);
-    toggle.title = toggle.getAttribute('aria-label');
-  }
-  async function playVideo() {
-    const source = seaVideo.querySelector('source');
-    if (!source.getAttribute('src')) { source.src = window.matchMedia('(max-width: 640px)').matches ? source.dataset.mobileSrc : source.dataset.src; seaVideo.load(); }
-    seaVideo.muted = true;
-    try { await seaVideo.play(); } catch { /* The poster stays visible when autoplay is blocked. */ }
-    updateVideoControl();
-  }
-  toggle.hidden = false;
-  toggle.addEventListener('click', () => { if (seaVideo.paused) playVideo(); else seaVideo.pause(); });
-  for (const event of ['play', 'pause', 'ended', 'error']) seaVideo.addEventListener(event, updateVideoControl);
-  reducedMotion.addEventListener('change', event => { if (event.matches) { resumeOnReturn = false; seaVideo.pause(); } });
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { resumeOnReturn = !seaVideo.paused; seaVideo.pause(); }
-    else if (resumeOnReturn && !reducedMotion.matches) { resumeOnReturn = false; playVideo(); }
-  });
-  if (!reducedMotion.matches && !navigator.connection?.saveData) playVideo();
-  else updateVideoControl();
 }
 
 const watchCorner = $('#watch-corner');

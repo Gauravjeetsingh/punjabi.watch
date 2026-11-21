@@ -17,13 +17,13 @@ dialog{width:min(560px,calc(100% - 32px));max-height:min(720px,90dvh);padding:30
 .ocean-backdrop:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,25,34,.25),rgba(8,25,34,.22) 45%,rgba(6,23,31,.55))}
 .ocean-home #main{position:relative;z-index:1;isolation:isolate}
 .ocean-home .ocean-hero{height:100svh;min-height:620px;position:relative;display:flex;align-items:center;justify-content:center;padding:72px 32px 170px;text-align:center}
-.ocean-home .main-clock{min-height:0;padding:0;width:min(1120px,100%);text-shadow:0 2px 30px #00121c45;transform:translateY(20px)}
+.ocean-home .main-clock{min-height:0;padding:0;width:min(1120px,100%);text-shadow:var(--text-sun);transform:translateY(20px)}
 .ocean-home .day-period{font-size:clamp(22px,2.3vw,30px);line-height:2;color:#f4f8f4d9;margin-bottom:6px}
 .ocean-home .time-words{font-size:clamp(52px,7.8vw,112px);line-height:1.65;letter-spacing:-.035em;color:#fff}
 .ocean-home .numeric-time{color:#f5f8f3c7;font-size:13px;letter-spacing:.13em;margin-top:20px}
 .ocean-home .local-zone{color:#e5efedaa;font-size:10px;letter-spacing:.035em;margin-top:7px}
 .ocean-hero-bottom{position:absolute;bottom:33px;left:24px;right:24px;display:flex;flex-direction:column;align-items:center;gap:32px}
-.ocean-date{color:#eef5efcf;text-shadow:0 1px 10px #051b2180}
+.ocean-date{color:#eef5efcf;text-shadow:var(--text-sun-hint)}
 .ocean-date [lang=pa]{font-size:19px;line-height:1.8}
 .ocean-date #gregorian-date{font-size:10px;color:#e5efedb0;margin-top:3px;letter-spacing:.03em}
 .scroll-cue{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:9px;letter-spacing:.11em;color:#eef5efb0;padding:5px 20px}
@@ -126,3 +126,55 @@ dialog{width:min(560px,calc(100% - 32px));max-height:min(720px,90dvh);padding:30
 #signup-disclosure a{text-decoration:underline;text-underline-offset:3px}
 @media(max-width:390px){.watch-page .signup-input-row .signup-button{padding:10px;font-size:11px}.signup-input-row input{font-size:12px;padding:11px 8px}}
 @media(max-width:640px){.signup-input-row input{font-size:16px}}
+/* Sundial hero: dial, then the time in words, then the date. Basic layout; styling to follow. */
+/* The page is the stone the dial is set into. #sun-light lays the sun's shadow and colour over all of it. */
+.ocean-home{background:#6e5434 url('/assets/background.jpg') center/cover no-repeat;position:relative;min-height:100svh}
+.sun-light{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:hidden;mix-blend-mode:multiply}
+.ocean-home .ocean-hero{height:auto;min-height:100svh;flex-direction:column;gap:20px;padding:32px 20px}
+/* The dial takes what the words and date leave, so the whole scene fits one screen. */
+.ocean-home .sundial{display:block;width:min(520px,86vw,max(200px,calc(100svh - 380px)));aspect-ratio:1;overflow:visible}
+.ocean-home .main-clock{transform:none}
+.ocean-home .time-words{font-size:clamp(36px,5.2vw,72px);line-height:1.5}
+.ocean-home .ocean-date{text-align:center}
+/* Letters stand a little proud of the stone: a short, sharp shadow away from the sun
+   (set by src/sky.js), and a soft contact shadow where they meet the stone, which
+   also keeps them legible. */
+.ocean-home{--text-sun:var(--text-sun-x,0) var(--text-sun-y,0) .6px rgb(20 24 34 / var(--text-sun-alpha,0)),0 0 3px rgb(0 0 0 / 32%),0 0 1px rgb(0 0 0 / 30%);
+  /* The date's smaller letters: the same light, just a hint of it. */
+  --text-sun-hint:calc(var(--text-sun-x,0px) * .4) calc(var(--text-sun-y,0px) * .4) .5px rgb(20 24 34 / calc(var(--text-sun-alpha,0) * .35)),0 0 2px rgb(0 0 0 / 14%)}
+/* Sky over the whole page, driven by src/sky.js from the real sun.
+   #main must not isolate, so the light layers blend with the stone beneath it. */
+.ocean-home #main{z-index:auto;isolation:auto}
+.sky-desaturate,.sky-glow,.sky-soften,.sky-night{position:absolute;inset:0;pointer-events:none}
+/* Night vision: colour drains away as it gets dark. */
+.sky-desaturate{z-index:2;background:#808080;mix-blend-mode:saturation;opacity:var(--sky-desaturate,0);display:none}
+.sky-desaturating .sky-desaturate{display:block}
+/* Twilight: the colour of the light is in the sundial's tint; this only adds a faint
+   warmth from the side where the sun is. Soft light warms the mid-tones of the stone
+   without lifting its darks (screen would turn the shadows milky). */
+.sky-glow{z-index:2;mix-blend-mode:soft-light;opacity:calc(var(--sky-glow,0) * .6);background:linear-gradient(var(--sky-glow-angle,90deg),var(--sky-glow-color,#ff9240) 0%,color-mix(in srgb,var(--sky-glow-color,#ff9240) 30%,transparent) 45%,transparent 85%);display:none}
+.sky-glowing .sky-glow{display:block}
+/* Night vision: fine detail goes soft and contrast drops toward a dim blue, as the
+   eye switches to rods. Moonlight brings some of it back. The lamp-lit words sit above. */
+.sky-soften{z-index:2;display:none}
+.night-vision .sky-soften{display:block;-webkit-backdrop-filter:blur(var(--sky-blur,0px));backdrop-filter:blur(var(--sky-blur,0px))}
+.sky-night{z-index:2;background:var(--sky-night-color,#181f34);opacity:var(--sky-veil,0);display:none}
+.sky-veiled .sky-night{display:block}
+/* After dark a lamp comes on: the words glow. The light it throws on the stone, and
+   the gnomon's shadow from it, are drawn by the sundial (the `lamp` option). */
+.ocean-home .main-clock,.ocean-home .ocean-date{position:relative;transition:color .9s ease,text-shadow .9s ease}
+.lights-on .main-clock,.lights-on .ocean-date{z-index:3}
+.lights-on .main-clock{color:#fff4dc;text-shadow:0 0 6px rgb(255 214 150 / 85%),0 0 22px rgb(255 170 90 / 60%),0 0 60px rgb(255 140 60 / 40%)}
+.lights-on .ocean-home .time-words,.lights-on .time-words,.lights-on .day-period{color:#fff4dc}
+.lights-on .ocean-date{color:#f6e2bf;text-shadow:0 0 8px rgb(255 190 120 / 60%),0 0 24px rgb(255 150 70 / 35%)}
+
+/* /preview/ controls: one compact row, out of the way; they sit above the sunlight layer. */
+.preview-controls{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:3;width:min(760px,calc(100% - 24px));display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:10px 14px;border-radius:12px;background:#1b140bd9;color:#f4ecdc;font:13px/1.4 system-ui,-apple-system,sans-serif}
+.preview-clock{font-variant-numeric:tabular-nums;font-weight:600;min-width:42px}
+.preview-controls input[type=range]{flex:1 1 180px;accent-color:#d6b46a;min-width:0}
+.preview-controls input[type=date],.preview-controls button{font:inherit;color:inherit;background:#ffffff14;border:1px solid #ffffff30;border-radius:8px;padding:4px 9px}
+.preview-controls button[aria-pressed=true]{background:#d6b46a;color:#1b140b}
+.preview-sun{flex-basis:100%;margin:0;font-size:11px;color:#d8ccb4;line-height:1.3}
+.preview-page .ocean-hero{padding:24px 20px 110px;gap:18px}
+.preview-page .sundial{width:min(560px,86vw,max(240px,calc(100svh - 400px)))}
+@media(max-width:640px){.preview-page .ocean-hero{padding-bottom:150px}}
