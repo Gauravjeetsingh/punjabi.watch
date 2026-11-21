@@ -14,6 +14,10 @@
   const pt = p => `${n(p[0])} ${n(p[1])}`;
   const line = (a, b, attrs = '') => `<path d="M${pt(a)}L${pt(b)}" ${attrs}/>`;
   const SUN_DIAMETER = 0.533 * Math.PI / 180;
+  // The inlaid ornament (assets/ornament.png, 900 × 551, outline only) in the
+  // southern field of the plate, in dial units: below the centre ring (r 116),
+  // inside the hour band (r 357) and clear of the 5 and 19 o'clock lines.
+  const ORNAMENT = { x: 352, y: 636, width: 320, height: 195.9 };
 
   /* Engraved hour lines, quarter ticks and Gurmukhi numerals for a latitude.
      `numerals` is the glyph table written by the generator (assets/numerals.json). */
@@ -177,5 +181,5 @@
 </g></svg>`;
   }
 
-  return { dialLayout, shadow, gnomonTop, gnomonProfile };
+  return { ORNAMENT, dialLayout, shadow, gnomonTop, gnomonProfile };
 });

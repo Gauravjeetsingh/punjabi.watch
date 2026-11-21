@@ -139,6 +139,9 @@ html:has(> body.ocean-home){background:#6e5434}
 .ocean-home .main-clock{transform:none}
 .ocean-home .time-words{font-size:clamp(36px,5.2vw,72px);line-height:1.5}
 .ocean-home .ocean-date{text-align:center}
+/* The ornament is inlaid in the bronze face: a touch darker and less saturated than
+   the artwork, so it reads as part of the plate rather than laid on top of it. */
+.sundial .sundial-ornament{filter:brightness(.22) saturate(.85);opacity:.3}
 /* Letters stand a little proud of the stone: a short, sharp shadow away from the sun
    (set by src/sky.js), and a soft contact shadow where they meet the stone, which
    also keeps them legible. */

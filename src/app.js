@@ -27,7 +27,7 @@ if ($('#time-words')) {
   const hasWorld = Boolean($('#world-clocks'));
   const setText = (selector, text) => { const node = $(selector); if (node && node.textContent !== text) node.textContent = text; };
   let sundial = null;
-  try { if ($('#sundial')) sundial = SundialView.mount($('#sundial'), { plateHref: '/assets/sundial/sundial-plate.svg', numerals: sundialNumerals, overlay: $('#sun-light'), lamp: $('.main-clock') }); }
+  try { if ($('#sundial')) sundial = SundialView.mount($('#sundial'), { plateHref: '/assets/sundial/sundial-plate.svg', ornamentHref: '/assets/sundial/ornament.png', numerals: sundialNumerals, overlay: $('#sun-light'), lamp: $('.main-clock') }); }
   catch { /* The words and date still work without the dial. */ }
   function drawSundial(now, zone, parts) {
     if (!sundial) return;

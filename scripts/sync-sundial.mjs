@@ -16,4 +16,5 @@ for (const name of ['sundial-engine', 'sundial-svg', 'sundial-view']) {
 }
 await copyFile(`${design}assets/numerals.json`, `${root}src/sundial/numerals.json`);
 await copyFile(`${design}assets/sundial-plate.svg`, `${root}public/assets/sundial/sundial-plate.svg`);
+await copyFile(`${design}assets/ornament.png`, `${root}public/assets/sundial/ornament.png`);
 console.log('Synced sundial engine and plate from design/sundial.');

@@ -194,7 +194,7 @@
    *              lampHeight dial units above the ground. It lights a warm pool on the
    *              stone and the gnomon casts a long shadow away from it.
    */
-  function mount(svg, { plateHref = 'assets/sundial-plate.svg', numerals = root && root.SUNDIAL_NUMERALS, groundShadow = true, overlay = null, lamp = null, lampHeight = 640 } = {}) {
+  function mount(svg, { plateHref = 'assets/sundial-plate.svg', ornamentHref = 'assets/ornament.png', numerals = root && root.SUNDIAL_NUMERALS, groundShadow = true, overlay = null, lamp = null, lampHeight = 640 } = {}) {
     svg.setAttribute('viewBox', '0 0 1024 1024');
     svg.innerHTML = '';
     const defs = el(svg, 'defs');
@@ -209,6 +209,12 @@
     // seam where bronze meets stone (contact shadow), the same in any light.
     const ground = el(svg, 'circle', { cx: 512, cy: 512, r: 492, fill: '#000', opacity: 0.45, filter: 'url(#v-ground)' });
     el(svg, 'image', { href: plateHref, x: 0, y: 0, width: 1024, height: 1024 });
+    // The ornament is inlaid in the face, flush with it: no shadow of its own.
+    // Pages can tune its colour with CSS (class sundial-ornament).
+    if (ornamentHref) {
+      const O = S.ORNAMENT;
+      el(svg, 'image', { href: ornamentHref, x: O.x, y: O.y, width: O.width, height: O.height, class: 'sundial-ornament' });
+    }
     const layout = el(svg, 'g');
     // Bronze is a metal: it mirrors the sky, a little, on top of its own colour.
     const skyReflection = el(svg, 'circle', { cx: 512, cy: 512, r: 491, style: 'mix-blend-mode:screen', opacity: 0.16 });
