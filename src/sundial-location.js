@@ -1,7 +1,9 @@
 // Where to set the sundial, without asking for the visitor's location.
-// The device time zone picks a representative city; nothing leaves the browser.
-// Latitude shapes the dial (hour lines, gnomon height); longitude only decides
-// the real sunrise and sunset. Unknown zones fall back to Amritsar.
+// The device time zone, the same one the clock uses, picks the place; nothing
+// leaves the browser. Latitude shapes the dial (hour lines, gnomon height);
+// longitude decides the real sunrise and sunset, so it must agree with the clock.
+import zoneCoordinates from './zone-coordinates.js';
+
 const AMRITSAR = { name: 'Amritsar', latitude: 31.634, longitude: 74.873 };
 
 const byZone = {
@@ -37,6 +39,31 @@ const byZone = {
   'Africa/Nairobi': { name: 'Nairobi', latitude: -1.292, longitude: 36.822 },
 };
 
-export function sundialLocation(zone) {
-  return byZone[zone] || AMRITSAR;
+// Minutes the zone is ahead of UTC at `date`.
+export function utcOffset(zone, date = new Date()) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' })
+    .formatToParts(date).filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)]));
+  return (Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute) - Math.floor(date.getTime() / 60000) * 60000) / 60000;
+}
+
+const SOUTH = /^(Australia|Antarctica)\/|^Pacific\/(Auckland|Chatham|Fiji|Tongatapu|Apia|Noumea|Efate)|^America\/(Argentina|Santiago|Sao_Paulo|Montevideo|Asuncion|Lima|La_Paz)|^Africa\/(Johannesburg|Maputo|Harare|Lusaka|Windhoek|Gaborone)|^Indian\/(Mauritius|Reunion)/;
+
+// 1. a city chosen for the Punjabi community in that zone, 2. the zone's own
+// location from the tz database, 3. for any other zone name (an alias, UTC,
+// Etc/GMT+5), a longitude read from the clock's UTC offset.
+// In every case the sun's longitude agrees with the clock, so daytime on the
+// clock is daytime on the dial.
+export function sundialLocation(zone, date = new Date()) {
+  let offset = 0;
+  try { offset = utcOffset(zone, date); } catch { /* invalid zone: treat as UTC */ }
+  const clockLongitude = offset / 4; // 15° per hour
+  const known = byZone[zone] || (zoneCoordinates[zone] && { name: zone.split('/').pop().replaceAll('_', ' '), latitude: zoneCoordinates[zone][0], longitude: zoneCoordinates[zone][1] });
+  // A real place is at most a few hours from its zone's offset; anything further is the wrong place.
+  const gap = known ? Math.abs((((known.longitude - clockLongitude) % 360) + 540) % 360 - 180) : Infinity;
+  if (known && gap <= 60) return known;
+  return {
+    name: zone.split('/').pop().replaceAll('_', ' '),
+    latitude: known ? known.latitude : SOUTH.test(zone) ? -AMRITSAR.latitude : AMRITSAR.latitude,
+    longitude: clockLongitude,
+  };
 }

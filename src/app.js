@@ -32,7 +32,7 @@ if ($('#time-words')) {
   function drawSundial(now, zone, parts) {
     if (!sundial) return;
     try {
-      const place = sundialLocation(zone);
+      const place = sundialLocation(zone, now);
       // Clock-corrected (heliochronometer): the shadow reads the device's clock time.
       applySky(sundial.update({ latitude: place.latitude, longitude: place.longitude, date: now, clockHours: parts.hour + parts.minute / 60, mode: 'clock' }));
     } catch { /* Keep the last drawn shadow. */ }
